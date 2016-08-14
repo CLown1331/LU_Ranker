@@ -9,13 +9,15 @@ namespace lu_ranker
 	{
 		public static void Main (string[] args)
 		{
-			StreamReader read = new StreamReader( "..\\..\\input.txt" );
+			StreamReader read = new StreamReader( "..\\..\\..\\input.txt" );
 			StreamWriter file = new StreamWriter( "..\\..\\..\\index.html" );
 
 			List < User > UserList = new List < User >();
 
-			string sURL = "http://codeforces.com/api/user.rating?handle=";
-			string sLine = "";
+			string cfURL = "http://codeforces.com/api/user.rating?handle=";
+			string tcURL = "http://api.topcoder.com/v2/users/";
+			string sLine = "", tempString;
+			string[] words; 
 			WebRequest wrGETURL;
 			Stream objStream;
 			StreamReader objReader;
@@ -23,7 +25,8 @@ namespace lu_ranker
 
 			while( ( sLine = read.ReadLine() ) != null )
 			{
-				UserList.Add( new User( sLine ) ); 
+				words = sLine.Split( ' ' );
+				UserList.Add( new User( words[0], words[1] ) ); 
 			}
 
 			//UserList.Add( new User( "CLown1331" ) );  
@@ -34,7 +37,7 @@ namespace lu_ranker
 		
 			for( int i=0; i<UserList.Count; i++ )
 			{
-				wrGETURL = WebRequest.Create( sURL + UserList[i].name );
+				wrGETURL = WebRequest.Create( cfURL + UserList[i].cfname );
 				objStream = wrGETURL.GetResponse().GetResponseStream();
 				objReader = new StreamReader( objStream );
 
@@ -52,6 +55,29 @@ namespace lu_ranker
 
 				UserList[i].cfRating = rating;
 
+				wrGETURL = WebRequest.Create( tcURL + UserList[i].tcname );
+				objStream = wrGETURL.GetResponse().GetResponseStream();
+				objReader = new StreamReader( objStream );
+
+				sLine = "";
+
+				while( ( tempString = objReader.ReadLine () ) != null ) 
+				{
+					sLine += tempString;
+				}
+
+				len = sLine.Length;
+				rating = 0;
+					
+				for( int k = sLine.IndexOf( "\"rating\":" ) + 10; k < len; k++ ) 
+				{
+					if( sLine [k] < '0' || sLine [k] > '9' ) break;
+					rating *= 10;
+					rating += ( sLine[k] - '0' );
+				}
+
+				UserList[i].tcRating = rating;
+
 				UserList[i].calcPoints();
 
 				//Console.WriteLine( "{0} : {1}", UserList[i].name, UserList[i].cfRating ); 
@@ -63,8 +89,10 @@ namespace lu_ranker
 
 			for (int i = 0; i < UserList.Count; i++) 
 			{
-				file.WriteLine( "<a href=\"http:www.codeforces.com/profile/{0}\" style=\"text-decoration:none\"><font color=\"{1}\">{2}</font></a> : {3}<br>", UserList[i].name, getColor( UserList[i].cfRating ), UserList[i].name, UserList[i].cfRating ); 
-			} 
+				//Console.WriteLine( "CF: {0}, TC: {1}", UserList[i].cfRating, UserList[i].tcRating );
+				file.WriteLine( "<a href=\"http:www.codeforces.com/profile/{0}\" style=\"text-decoration:none\"><font color=\"{1}\">{2}</font></a> : {3}&nbsp&nbsp", UserList[i].cfname, getCFColor( UserList[i].cfRating ), UserList[i].cfname, UserList[i].cfRating ); 
+				file.WriteLine( "<a href=\"https://www.topcoder.com/members/{0}\" style=\"text-decoration:none\"><font color=\"{1}\">{2}</font></a> : {3}<br>", UserList[i].tcname, getTCColor( UserList[i].tcRating ), UserList[i].tcname, UserList[i].tcRating ); 
+			}
 				
 			//Console.ReadLine(); 
 			file.WriteLine( "\t</body>\n</html>" ); 
@@ -73,13 +101,26 @@ namespace lu_ranker
 			read.Close ();
 		}
 
-		public static string getColor( int rating )
+		public static string getCFColor( int rating )
 		{
 			if( rating < 1200 ) return "d3d1c2";
 			if( rating >= 1200 && rating < 1400 ) return "008000";
 			if( rating >= 1400 && rating < 1600 ) return "00cccc";
 			if( rating >= 1600 && rating < 1900 ) return "0000FF";
 			if( rating >= 1900 && rating < 2200 ) return "ff33cc";
+			if( rating >= 2200 && rating < 2400 ) return "FFA500";
+			if( rating >= 2200 && rating < 2400 ) return "ff1a1a";
+			if( rating >= 2600 && rating < 2900 ) return "e60000";
+			if( rating >= 2900 ) return "800000";
+			return "d3d1c2";
+		}
+
+		public static string getTCColor( int rating )
+		{
+			if( rating < 900 ) return "d3d1c2";
+			if( rating >= 900 && rating < 1200 ) return "008000";
+			if( rating >= 1200 && rating < 1500 ) return "0000FF";
+			if( rating >= 1500 && rating < 2200 ) return "FFFF00";
 			if( rating >= 2200 && rating < 2600 ) return "ff1a1a";
 			if( rating >= 2600 && rating < 2900 ) return "e60000";
 			if( rating >= 2900 ) return "800000";
