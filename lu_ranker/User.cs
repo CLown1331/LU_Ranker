@@ -4,16 +4,18 @@ namespace lu_ranker
 {
 	public class User : IComparable < User >
 	{
-		public string name;
+		public string cfname;
+		public string tcname;
 		public int cfRating;
 		public int tcRating;
 		public int cfColor;
 		public int tcColor;
 		public double point;
 
-		public User( string name )
+		public User( string name1, string name2 )
 		{
-			this.name = name;
+			this.cfname = name1;
+			this.tcname = name2;
 			this.cfRating = 0;
 			this.tcRating = 0;
 			this.cfColor = 0;
