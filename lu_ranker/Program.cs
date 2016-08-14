@@ -10,7 +10,7 @@ namespace lu_ranker
 		public static void Main (string[] args)
 		{
 			StreamReader read = new StreamReader( "..\\..\\input.txt" );
-			StreamWriter file = new StreamWriter( "..\\..\\index.html" );
+			StreamWriter file = new StreamWriter( "..\\..\\..\\index.html" );
 
 			List < User > UserList = new List < User >();
 
