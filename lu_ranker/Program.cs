@@ -13,6 +13,7 @@ namespace lu_ranker
 			StreamWriter file = new StreamWriter( "..\\..\\..\\index.html" );
 
 			List < User > UserList = new List < User >();
+			HashSet < double > uniqueRatings = new HashSet < double > ();
 
 			string cfURL = "http://codeforces.com/api/user.rating?handle=";
 			string tcURL = "http://api.topcoder.com/v2/users/";
@@ -85,17 +86,33 @@ namespace lu_ranker
 
 			UserList.Sort(); 
 
-			file.Write( "<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<title> LU Ranklist </title>\n\t</head>\n\t<body bgcolor=\"#fffbdc\">" );
-
-			for (int i = 0; i < UserList.Count; i++) 
+			file.Write( "<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<title> LU Ranklist </title>\n\t\t<style> table, th, td { border: 1px solid black; } </style>\n\t</head>\n\t<body bgcolor=\"#fffbdc\">" );
+			file.WriteLine( "<table style=\"width:68%\" align=\"center\">" );
+			file.WriteLine ("<tr>");
+			file.WriteLine ("<th> Rank </th>");
+			file.WriteLine ("<th> Codeforces ID </th> "  );
+			file.WriteLine ("<th> Codeforces Rating </th> " );
+			file.WriteLine ("<th> TopCoder ID </th> " );
+			file.WriteLine ("<th> TopCoder Rating </th> " );
+			file.WriteLine ("<th> Total Points </th> " );
+			file.WriteLine ("</tr>" ); 
+			for( int i = 0, id = 0, pls = 1; i < UserList.Count; i++, pls++ ) 
 			{
 				//Console.WriteLine( "CF: {0}, TC: {1}", UserList[i].cfRating, UserList[i].tcRating );
-				file.WriteLine( "<a href=\"http:www.codeforces.com/profile/{0}\" style=\"text-decoration:none\"><font color=\"{1}\">{2}</font></a> : {3}&nbsp&nbsp", UserList[i].cfname, getCFColor( UserList[i].cfRating ), UserList[i].cfname, UserList[i].cfRating ); 
-				file.WriteLine( "<a href=\"https://www.topcoder.com/members/{0}\" style=\"text-decoration:none\"><font color=\"{1}\">{2}</font></a> : {3}<br>", UserList[i].tcname, getTCColor( UserList[i].tcRating ), UserList[i].tcname, UserList[i].tcRating ); 
+				if( uniqueRatings.Contains( UserList[i].point ) == false) {
+					id = pls;
+					uniqueRatings.Add( UserList[i].point ); 
+				}
+				file.WriteLine( "<tr>" );
+				file.WriteLine( "<td>{0}</td>,  ", id );
+				file.WriteLine( "<td><a href=\"http:www.codeforces.com/profile/{0}\" style=\"text-decoration:none\"><font color=\"{1}\">{2}</font></a></td> <td> {3}</td>", UserList[i].cfname, getCFColor( UserList[i].cfRating ), UserList[i].cfname, UserList[i].cfRating ); 
+				file.WriteLine( "<td><a href=\"https://www.topcoder.com/members/{0}\" style=\"text-decoration:none\"><font color=\"{1}\">{2}</font></a></td> <td> {3}</td>", UserList[i].tcname, getTCColor( UserList[i].tcRating ), UserList[i].tcname, UserList[i].tcRating ); 
+				file.WriteLine( "<td> {0} </td>", UserList[i].point );
+				file.WriteLine( "</tr>" );
 			}
 				
 			//Console.ReadLine(); 
-			file.WriteLine( "\t</body>\n</html>" ); 
+			file.WriteLine( "</table>\t</body>\n</html>" ); 
 			file.Close();
 
 			read.Close ();
