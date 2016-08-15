@@ -82,6 +82,7 @@ namespace lu_ranker
 				UserList[i].calcPoints();
 
 				//Console.WriteLine( "{0} : {1}", UserList[i].name, UserList[i].cfRating ); 
+				System.Threading.Thread.Sleep( 100 );
 			}
 
 			UserList.Sort(); 
@@ -89,12 +90,12 @@ namespace lu_ranker
 			file.Write( "<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<title> LU Ranklist </title>\n\t\t<style> table, th, td { border: 1px solid black; } </style>\n\t</head>\n\t<body bgcolor=\"#fffbdc\">" );
 			file.WriteLine( "<table style=\"width:68%\" align=\"center\">" );
 			file.WriteLine ("<tr>");
-			file.WriteLine ("<th> Rank </th>");
-			file.WriteLine ("<th> Codeforces ID </th> "  );
-			file.WriteLine ("<th> Codeforces Rating </th> " );
-			file.WriteLine ("<th> TopCoder ID </th> " );
-			file.WriteLine ("<th> TopCoder Rating </th> " );
-			file.WriteLine ("<th> Total Points </th> " );
+			file.WriteLine ("<th align=\"center\"> Rank </th>");
+			file.WriteLine ("<th align=\"center\"> Codeforces ID </th> "  );
+			file.WriteLine ("<th align=\"center\"> Codeforces Rating </th> " );
+			file.WriteLine ("<th align=\"center\"> TopCoder ID </th> " );
+			file.WriteLine ("<th align=\"center\"> TopCoder Rating </th> " );
+			file.WriteLine ("<th align=\"center\"> Points </th> " );
 			file.WriteLine ("</tr>" ); 
 			for( int i = 0, id = 0, pls = 1; i < UserList.Count; i++, pls++ ) 
 			{
@@ -104,10 +105,10 @@ namespace lu_ranker
 					uniqueRatings.Add( UserList[i].point ); 
 				}
 				file.WriteLine( "<tr>" );
-				file.WriteLine( "<td>{0}</td>,  ", id );
-				file.WriteLine( "<td><a href=\"http:www.codeforces.com/profile/{0}\" style=\"text-decoration:none\"><font color=\"{1}\">{2}</font></a></td> <td> {3}</td>", UserList[i].cfname, getCFColor( UserList[i].cfRating ), UserList[i].cfname, UserList[i].cfRating ); 
-				file.WriteLine( "<td><a href=\"https://www.topcoder.com/members/{0}\" style=\"text-decoration:none\"><font color=\"{1}\">{2}</font></a></td> <td> {3}</td>", UserList[i].tcname, getTCColor( UserList[i].tcRating ), UserList[i].tcname, UserList[i].tcRating ); 
-				file.WriteLine( "<td> {0} </td>", UserList[i].point );
+				file.WriteLine( "<td align=\"center\">{0}</td>,  ", id );
+				file.WriteLine( "<td align=\"center\"><a href=\"http:www.codeforces.com/profile/{0}\" style=\"text-decoration:none\"><font color=\"{1}\">{2}</font></a></td> <td align=\"center\"> {3}</td>", UserList[i].cfname, getCFColor( UserList[i].cfRating ), UserList[i].cfname, UserList[i].cfRating ); 
+				file.WriteLine( "<td align=\"center\"><a href=\"https://www.topcoder.com/members/{0}\" style=\"text-decoration:none\"><font color=\"{1}\">{2}</font></a></td> <td align=\"center\"> {3}</td>", UserList[i].tcname, getTCColor( UserList[i].tcRating ), UserList[i].tcname, UserList[i].tcRating ); 
+				file.WriteLine( "<td align=\"center\"> {0} </td>", UserList[i].point.ToString ("#.##") );
 				file.WriteLine( "</tr>" );
 			}
 				
