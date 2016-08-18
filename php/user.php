@@ -4,6 +4,8 @@
 		public $tcName;
 		public $cfRating;
 		public $tcRating;
+		public $cfColor;
+		public $tcColor;
 		public $points;
 		
 		public function __construct( $cfName, $tcName ) {
