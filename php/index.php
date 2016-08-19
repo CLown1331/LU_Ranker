@@ -8,14 +8,18 @@
 	
 	ob_start(); 
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 	<head>
-		<title> LU_RankList </title>
-		<style>
-			
-		</style>
+	  <title> LU_Ranklist </title>
+	  <meta charset="utf-8">
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	</head>
 	<body>
+	<div class="container">
 	<?php	
 		set_time_limit( 0 );
 		include_once( 'user.php' );
@@ -41,31 +45,35 @@
 			
 		usort( $userList, 'cmp' );
 		
-		echo "\t<table style=\"width:68%\" align=\"center\">\n";
+		echo "\t<table class=\"table\">\n";
+		echo "\t\t<thead>\n";
 		echo "\t\t<tr>\n";
-		echo "\t\t\t<th align=\"center\"> Rank <th>\n";
-		echo "\t\t\t<th align=\"center\"> Codeforces Name <th>\n";
-		echo "\t\t\t<th align=\"center\"> Codeforces Rating <th>\n";
-		echo "\t\t\t<th align=\"center\"> TopCoder Name <th>\n";
-		echo "\t\t\t<th align=\"center\"> TopCoder Rating <th>\n";
-		echo "\t\t\t<th align=\"center\"> Points <th>\n";
+		echo "\t\t\t<th> Rank <th>\n";
+		echo "\t\t\t<th> Codeforces Handle <th>\n";
+		echo "\t\t\t<th> Codeforces Rating <th>\n";
+		echo "\t\t\t<th> TopCoder Handle <th>\n";
+		echo "\t\t\t<th> TopCoder Rating <th>\n";
+		echo "\t\t\t<th> Points <th>\n";
 		echo "\t\t</tr>\n";
+		echo "\t\t</thead>\n";
+		echo "\t\t<tbody\n";
 		$prev = 0;
 		$rank = 0;
 		foreach( $userList as $user ) {
 			if( $prev != $user->points ) $rank++;
 			$prev = $user->points;
 			echo "\t\t<tr>\n";
-			echo "\t\t\t<td align=\"center\"> $rank <td>\n";
-			echo "\t\t\t<td align=\"center\"> <a href=\"http://www.codeforces.com/profile/$user->cfName\" style=\"text-decoration:none\" > <font color=\"$user->cfColor\">  $user->cfName </font> </a> <td>\n";
-			echo "\t\t\t<td align=\"center\"> $user->cfRating <td>\n";
-			echo "\t\t\t<td align=\"center\"> <a href=\"https://www.topcoder.com/members/$user->tcName\" style=\"text-decoration:none\" > <font color=\"$user->tcColor\">  $user->tcName </font> </a> <td>\n";
-			echo "\t\t\t<td align=\"center\"> $user->tcRating <td>\n";
-			echo "\t\t\t<td align=\"center\"> $user->points <td>\n";
+			echo "\t\t\t<td> $rank <td>\n";
+			echo "\t\t\t<td> <a href=\"http://www.codeforces.com/profile/$user->cfName\" style=\"text-decoration:none\" > <font color=\"$user->cfColor\">  $user->cfName </font> </a> <td>\n";
+			echo "\t\t\t<td> $user->cfRating <td>\n";
+			echo "\t\t\t<td> <a href=\"https://www.topcoder.com/members/$user->tcName\" style=\"text-decoration:none\" > <font color=\"$user->tcColor\">  $user->tcName </font> </a> <td>\n";
+			echo "\t\t\t<td> $user->tcRating <td>\n";
+			echo "\t\t\t<td> $user->points <td>\n";
 			echo "\t\t</tr>\n";
 		}
 		
-		echo "\t</table>";
+		echo "\t\t<tbody\n";
+		echo "\t\t</table>";
 		echo "\n";
 		fclose( $file );
 		
@@ -127,6 +135,7 @@
 			return $a->points > $b->points ? -1 : 1;
 		}
 	?>
+	</div>
 	</body>
 </html>
 
