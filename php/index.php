@@ -11,34 +11,48 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-	  <title> LU_Ranklist </title>
-	  <meta charset="utf-8">
-	  <meta name="viewport" content="width=device-width, initial-scale=1">
-	  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	  	<title> LU_Ranklist </title>
+	  	<meta charset="utf-8">
+	  	<meta name="viewport" content="width=device-width, initial-scale=1">
+	  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+	  	<style>
+	  	body {
+    		background-color: white;
+    	}
+    	</style>
 	</head>
 	<body>
 	<div class="container">
 	<?php	
-		set_time_limit( 0 );
+		//set_time_limit( 0 );
 		include_once( 'user.php' );
 		
-		$file = fopen( "input.txt", "r" );
-		
-		while( $handles = fscanf( $file, "%s %s" ) ) {
-			list( $cfName, $tcName ) = $handles;
-			$userList[] = new User( $cfName, $tcName );
+		$formula = fopen( "formula.txt", "r" );
+
+		$formula_values = fscanf( $formula, "%d %d" );
+
+		list( $cfValue, $tcValue ) = $formula_values;
+
+		$file = fopen( "input.csv", "r" );
+
+		fgets( $file, 4096 );
+
+		while( $handles = fscanf( $file, "%s , %s , %s , %s" ) ) {
+			list( $fName, $lName, $cfName, $tcName ) = $handles;
+			$userList[] = new User( $fName, $lName, $cfName, $tcName );
 		}
 		
 		//print_r( $userList );
 				
 		foreach( $userList as $user ) {
+			//print $user->cfName;
 			$user->cfRating = get_cf_rating( $user->cfName );
 			$user->tcRating = get_tc_rating( $user->tcName );
 			$user->cfColor = get_cf_color( $user->cfRating );
 			$user->tcColor = get_tc_color( $user->tcRating );
-			$user->points = get_points( $user->cfRating, $user->tcRating );
+			$user->points = get_points( $user->cfRating, $user->tcRating, $cfValue, $tcValue );
 			$user->points = number_format( $user->points, 2 );
-			usleep( 200000 );
+			usleep( 20000 );
 		}
 			
 		usort( $userList, 'cmp' );
@@ -47,6 +61,7 @@
 		echo "\t\t<thead>\n";
 		echo "\t\t<tr>\n";
 		echo "\t\t\t<th> Rank <th>\n";
+		echo "\t\t\t<th> Name <th>\n";
 		echo "\t\t\t<th> Codeforces Handle <th>\n";
 		echo "\t\t\t<th> Codeforces Rating <th>\n";
 		echo "\t\t\t<th> TopCoder Handle <th>\n";
@@ -62,6 +77,7 @@
 			$prev = $user->points;
 			echo "\t\t<tr>\n";
 			echo "\t\t\t<td> $rank <td>\n";
+			echo "\t\t\t<td> $user->fName $user->lName <td>\n";
 			echo "\t\t\t<td> <a href=\"http://www.codeforces.com/profile/$user->cfName\" style=\"text-decoration:none\" > <font color=\"$user->cfColor\">  $user->cfName </font> </a> <td>\n";
 			echo "\t\t\t<td> $user->cfRating <td>\n";
 			echo "\t\t\t<td> <a href=\"https://www.topcoder.com/members/$user->tcName\" style=\"text-decoration:none\" > <font color=\"$user->tcColor\">  $user->tcName </font> </a> <td>\n";
@@ -74,6 +90,7 @@
 		echo "\t\t</table>";
 		echo "\n";
 		fclose( $file );
+		fclose( $formula );
 		
 		function get_cf_rating( $handle ) {
 			if( $handle == "null" ) return 0;
@@ -102,7 +119,8 @@
 		}
 		
 		function get_cf_color( $rating ) {
-			if( !$rating || $rating < 1200 ) return "d3d1c2";
+			if( !$rating ) return "#000";
+			if( $rating < 1200 ) return "#808080";
 			if( $rating >= 1200 && $rating < 1400 ) return "008000";
 			if( $rating >= 1400 && $rating < 1600 ) return "00cccc";
 			if( $rating >= 1600 && $rating < 1900 ) return "0000FF";
@@ -111,22 +129,23 @@
 			if( $rating >= 2200 && $rating < 2400 ) return "ff1a1a";
 			if( $rating >= 2600 && $rating < 2900 ) return "e60000";
 			if( $rating >= 2900 ) return "800000";
-			return "d3d1c2";
+			return "$000";
 		}
 		
 		function get_tc_color( $rating ) {
-			if( !$rating || $rating < 900 ) return "d3d1c2";
+			if( !$rating ) return "#000";
+			if( $rating < 1200 ) return "#808080";
 			if( $rating >= 900 && $rating < 1200 ) return "008000";
 			if( $rating >= 1200 && $rating < 1500 ) return "0000FF";
 			if( $rating >= 1500 && $rating < 2200 ) return "FFFF00";
 			if( $rating >= 2200 && $rating < 2600 ) return "ff1a1a";
 			if( $rating >= 2600 && $rating < 2900 ) return "e60000";
 			if( $rating >= 2900 ) return "800000";
-			return "d3d1c2";
+			return "#000";
 		}
 		
-		function get_points( $cfRating, $tcRating ) {
-			return $cfRating / 1500.0 * 50 + $tcRating / 1200.0 * 50;
+		function get_points( $cfRating, $tcRating, $cfValue, $tcValue ) {
+			return $cfRating / 1500.0 * $cfValue + $tcRating / 1200.0 * $tcValue;
 		}
 		
 		function cmp( $a, $b ) {
@@ -134,8 +153,9 @@
 		}
 	?>
 	</div>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity=sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
 	</body>
 </html>
 
