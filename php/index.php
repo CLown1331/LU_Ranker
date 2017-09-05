@@ -39,6 +39,8 @@
 
 		while( $handles = fscanf( $file, "%s , %s , %s , %s" ) ) {
 			list( $fName, $lName, $cfName, $tcName ) = $handles;
+			$fName = str_replace( ".", " ", $fName );
+			$lName = str_replace( ".", " ", $lName );
 			$userList[] = new User( $fName, $lName, $cfName, $tcName );
 		}
 		
@@ -93,7 +95,7 @@
 		fclose( $formula );
 		
 		function get_cf_rating( $handle ) {
-			if( $handle == "null" ) return 0;
+			if( $handle == "null" || $handle == "" ) return 0;
 			$cfUrl = "http://codeforces.com/api/user.rating?handle=";
 			$data = file_get_contents( $cfUrl . $handle );
 			$json = json_decode( $data );
@@ -107,7 +109,7 @@
 		}
 		
 		function get_tc_rating( $handle ) {
-			if( $handle == "null" ) return 0;
+			if( $handle == "null" || $handle == "" ) return 0;
 			$tcUrl = str_replace('{handle}', $handle, 'https://api.topcoder.com/v2/users/{handle}/statistics/data/srm');
 			$data = file_get_contents( $tcUrl );
 			$json = json_decode( $data );
