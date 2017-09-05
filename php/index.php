@@ -59,8 +59,8 @@
 			
 		usort( $userList, 'cmp' );
 		
-		echo "\t<table class=\"table\">\n";
-		echo "\t\t<thead>\n";
+		echo "\t<table class=\"table table-responsive table-hover\">\n";
+		echo "\t\t<thead class=\"thead-inverse\">\n";
 		echo "\t\t<tr>\n";
 		echo "\t\t\t<th> Rank <th>\n";
 		echo "\t\t\t<th> Name <th>\n";
