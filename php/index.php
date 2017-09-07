@@ -80,9 +80,9 @@
 			echo "\t\t<tr>\n";
 			echo "\t\t\t<td> $rank <td>\n";
 			echo "\t\t\t<td> $user->fName $user->lName <td>\n";
-			echo "\t\t\t<td> <a href=\"http://www.codeforces.com/profile/$user->cfName\" style=\"text-decoration:none\" > <font color=\"$user->cfColor\">  $user->cfName </font> </a> <td>\n";
+			echo "\t\t\t<td> <a href=\"http://www.codeforces.com/profile/$user->cfName\" style=\"text-decoration:none\" > <font color=\"$user->cfColor\"> <b> $user->cfName </b> </font> </a> <td>\n";
 			echo "\t\t\t<td> $user->cfRating <td>\n";
-			echo "\t\t\t<td> <a href=\"https://www.topcoder.com/members/$user->tcName\" style=\"text-decoration:none\" > <font color=\"$user->tcColor\">  $user->tcName </font> </a> <td>\n";
+			echo "\t\t\t<td> <a href=\"https://www.topcoder.com/members/$user->tcName\" style=\"text-decoration:none\" > <font color=\"$user->tcColor\"> <b> $user->tcName </b> </font> </a> <td>\n";
 			echo "\t\t\t<td> $user->tcRating <td>\n";
 			echo "\t\t\t<td> $user->points <td>\n";
 			echo "\t\t</tr>\n";
