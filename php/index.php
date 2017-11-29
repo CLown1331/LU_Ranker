@@ -136,7 +136,7 @@
 		
 		function get_tc_color( $rating ) {
 			if( !$rating ) return "#000";
-			if( $rating < 1200 ) return "#808080";
+			if( $rating < 900 ) return "#808080";
 			if( $rating >= 900 && $rating < 1200 ) return "008000";
 			if( $rating >= 1200 && $rating < 1500 ) return "0000FF";
 			if( $rating >= 1500 && $rating < 2200 ) return "FFFF00";
